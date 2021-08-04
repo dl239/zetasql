@@ -176,7 +176,7 @@ jobs:
           name: release-artifacts
 
   macos-build:
-    runs-on: macos-latest
+    runs-on: macos-10.14
     timeout-minutes: 120
     env:
       build_argv: '--features=-supports_dynamic_linker '
