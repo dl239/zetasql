@@ -195,6 +195,7 @@ class Unparser : public ParseTreeVisitor {
                              void* data) override;
   void visitASTDeployStatement(const ASTDeployStatement* node, void* data) override;
   void visitASTStopStatement(const ASTStopStatement* node, void* data) override;
+  void visitASTExitStatement(const ASTExitStatement* node, void* data) override;
   void visitASTBeginStatement(const ASTBeginStatement* node,
                               void* data) override;
   void visitASTTransactionIsolationLevel(
@@ -437,6 +438,8 @@ class Unparser : public ParseTreeVisitor {
   void visitASTWindowAttributeInstNotInWindow(
       const ASTWindowAttributeInstNotInWindow *node, void *data) override;
   void visitASTLikeTableClause(const ASTLikeTableClause *node,
+                               void *data) override;
+  void visitASTExitClause(const ASTExitClause *node,
                                void *data) override;
   void visitASTPartitionBy(const ASTPartitionBy* node, void* data) override;
   void visitASTClusterBy(const ASTClusterBy* node, void* data) override;
