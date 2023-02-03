@@ -697,15 +697,17 @@ class ASTStopStatement final : public ASTStatement {
   const ASTTargetName* target_name_ = nullptr;
 };
 
-class ASTExitStatement final : public ASTNode {
+class ASTExitStatement final : public ASTStatement {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind = AST_EXIT_STATEMENT;
 
-  ASTExitStatement() : ASTNode(kConcreteNodeKind) {}
+  ASTExitStatement() : ASTStatement(kConcreteNodeKind) {}
   void Accept(ParseTreeVisitor* visitor, void* data) const override;
   zetasql_base::StatusOr<VisitResult> Accept(
       NonRecursiveParseTreeVisitor* visitor) const override;
-  std::string SingleNodeDebugString() const override;
+
+ private:
+  void InitFields() final {}
 };
 
 
