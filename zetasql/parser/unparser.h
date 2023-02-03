@@ -439,8 +439,6 @@ class Unparser : public ParseTreeVisitor {
       const ASTWindowAttributeInstNotInWindow *node, void *data) override;
   void visitASTLikeTableClause(const ASTLikeTableClause *node,
                                void *data) override;
-  void visitASTExitClause(const ASTExitClause *node,
-                               void *data) override;
   void visitASTPartitionBy(const ASTPartitionBy* node, void* data) override;
   void visitASTClusterBy(const ASTClusterBy* node, void* data) override;
   void visitASTCloneDataSource(const ASTCloneDataSource* node,
