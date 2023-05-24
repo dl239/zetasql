@@ -3591,9 +3591,9 @@ grantee_list:
     ;
 
 show_statement:
-    "SHOW" show_target opt_from_path_expression opt_like_string_literal
+    "SHOW" show_target opt_from_path_expression opt_like_string_literal opt_options_list
       {
-        $$ = MAKE_NODE(ASTShowStatement, @$, {$2, $3, $4});
+        $$ = MAKE_NODE(ASTShowStatement, @$, {$2, $3, $4, $5});
       }
     | "SHOW" show_with_name_target target_name
       {

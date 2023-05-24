@@ -878,6 +878,10 @@ void Unparser::visitASTShowStatement(const ASTShowStatement* node, void* data) {
     print("LIKE");
     node->optional_like_string()->Accept(this, data);
   }
+  if (node->options_list() != nullptr) {
+    print("OPTIONS");
+    node->options_list()->Accept(this, data);
+  }
 }
 
 void Unparser::visitASTTargetName(const ASTTargetName* node, void* data) {

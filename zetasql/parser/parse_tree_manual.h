@@ -218,6 +218,7 @@ class ASTShowStatement final : public ASTStatement {
   const ASTStringLiteral* optional_like_string() const {
     return optional_like_string_;
   }
+  const ASTOptionsList* options_list() const { return options_list_; }
 
   const ASTTargetName* optional_target_name() const {
     return optional_target_name_;
@@ -230,11 +231,13 @@ class ASTShowStatement final : public ASTStatement {
     fl.AddOptional(&optional_target_name_, AST_TARGET_NAME);
     fl.AddOptional(&optional_name_, AST_PATH_EXPRESSION);
     fl.AddOptional(&optional_like_string_, AST_STRING_LITERAL);
+    fl.AddOptional(&options_list_, AST_OPTIONS_LIST);
   }
   const ASTIdentifier* identifier_ = nullptr;
   const ASTTargetName* optional_target_name_ = nullptr;
   const ASTPathExpression* optional_name_ = nullptr;
   const ASTStringLiteral* optional_like_string_ = nullptr;
+  const ASTOptionsList* options_list_ = nullptr;
 };
 
 // Base class transaction modifier elements.
