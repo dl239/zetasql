@@ -944,6 +944,9 @@ using zetasql::ASTDropStatement;
 %token KW_UNTIL "UNTIL"
 %token KW_UPDATE "UPDATE"
 %token KW_USE "USE"
+%token KW_USER "USER"
+%token KW_IDENTIFIED "IDENTIFIED"
+%token KW_PASSWORD "PASSWORD"
 %token KW_VALUE "VALUE"
 %token KW_VALUES "VALUES"
 %token KW_VARIABLES "VARIABLES"
@@ -1016,6 +1019,7 @@ using zetasql::ASTDropStatement;
 %type <node> create_table_statement
 %type <node> create_view_statement
 %type <node> create_entity_statement
+%type <node> create_user_statement
 %type <expression> date_or_time_literal
 %type <node> define_table_statement
 %type <node> delete_statement
@@ -1028,6 +1032,9 @@ using zetasql::ASTDropStatement;
 %type <node> explain_statement
 %type <node> export_data_statement
 %type <node> export_model_statement
+%type <node> user_list
+%type <node> user_info
+%type <node> opt_password
 %type <expression> expression
 %type <node> generic_entity_type
 %type <node> grant_to_clause
@@ -1597,6 +1604,7 @@ sql_statement_body:
     | create_table_statement
     | create_view_statement
     | create_entity_statement
+    | create_user_statement
     | define_table_statement
     | describe_statement
     | execute_immediate
@@ -2093,6 +2101,15 @@ create_database_statement:
       }
     ;
 
+create_user_statement:
+    "CREATE" "USER" opt_if_not_exists user_list
+      {
+        auto* create = MAKE_NODE(ASTCreateUserStatement, @$, {$4});
+        create->set_is_if_not_exists($3);
+        $$ = create;
+      }
+    ;
+
 create_function_statement:
     "CREATE" opt_or_replace opt_create_scope opt_aggregate
         "FUNCTION" opt_if_not_exists function_declaration opt_function_returns
@@ -2195,6 +2212,30 @@ function_parameters:
       {
         $$ = MAKE_NODE(ASTFunctionParameters, @$);
       }
+    ;
+
+user_list:
+    user_info
+      {
+        $$ = MAKE_NODE(ASTUserList, @$, {$1});
+      }
+    | user_list "," user_info
+      {
+        $$ = WithEndLocation(WithExtraChildren($1, {$3}), @$);
+      }
+
+user_info:
+    identifier opt_password
+      {
+        $$ = MAKE_NODE(ASTUserInfo, @$, {$1, $2});
+      }
+
+opt_password:
+    "IDENTIFIED" "BY" identifier
+       {
+         $$ = $3
+       }
+    | /* Nothing */ { $$ = nullptr; }
     ;
 
 create_procedure_statement:
@@ -9102,6 +9143,10 @@ next_statement_kind_without_hint:
       "FUNCTION"
       {
         $$ = zetasql::ASTCreateTableFunctionStatement::kConcreteNodeKind;
+      }
+    | "CREATE" next_statement_kind_create_modifiers "USER"
+      {
+        $$ = zetasql::ASTCreateUserStatement::kConcreteNodeKind;
       }
     | "CREATE" next_statement_kind_create_modifiers "EXTERNAL"
       {

@@ -3095,6 +3095,27 @@ void Unparser::visitASTAlterAllRowAccessPoliciesStatement(
   node->alter_action()->Accept(this, data);
 }
 
+void Unparser::visitASTCreateUserStatement(const ASTCreateUserStatement* node,
+  print("CREATE");
+  print("USER");
+  if (node->is_if_not_exists()) print("IF NOT EXISTS");
+  if (node->user_list() != nullptr) {
+    node->user_list()->Accept(this, data);
+  }
+}
+
+void Unparser::visitASTUserList(const ASTUserList* node, void* data) {
+  UnparseChildrenWithSeparator(node, data, ",");
+}
+
+void Unparser::visitASTUserInfo(const ASTUserInfo* node, void* data) {
+  node->user_name()->Accept(this, data);
+  if (node->password() != nullptr) {
+    print("IDENTIFIED BY");
+    node->password()->Accept(this, data);
+  }
+}
+
 void Unparser::visitASTCreateIndexStatement(const ASTCreateIndexStatement* node,
                                             void* data) {
   print("CREATE");

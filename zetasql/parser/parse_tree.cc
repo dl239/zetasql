@@ -119,6 +119,7 @@ static absl::flat_hash_map<ASTNodeKind, std::string> CreateNodeNamesMap() {
   map[AST_CREATE_EXTERNAL_TABLE_STATEMENT] = "CreateExternalTableStatement";
   map[AST_CREATE_FUNCTION_STATEMENT] = "CreateFunctionStatement";
   map[AST_CREATE_INDEX_STATEMENT] = "CreateIndexStatement";
+  map[AST_CREATE_USER_STATEMENT] = "CreateUserStatement";
   map[AST_CREATE_PROCEDURE_STATEMENT] = "CreateProcedureStatement";
   map[AST_CREATE_MODEL_STATEMENT] = "CreateModelStatement";
   map[AST_CREATE_ROW_ACCESS_POLICY_STATEMENT] =
@@ -254,6 +255,8 @@ static absl::flat_hash_map<ASTNodeKind, std::string> CreateNodeNamesMap() {
   map[AST_UNPIVOT_IN_ITEM] = "UnpivotInItem";
   map[AST_UNPIVOT_IN_ITEM_LIST] = "UnpivotInItemList";
   map[AST_UNPIVOT_IN_ITEM_LABEL] = "UnpivotInItemLabel";
+  map[AST_USER_LIST] = "UserList";
+  map[AST_USER_INFO] = "UserInfo";
   map[AST_PRIMARY_KEY] = "PrimaryKey";
   map[AST_PRIMARY_KEY_COLUMN_ATTRIBUTE] = "PrimaryKeyColumnAttribute";
   map[AST_PRIVILEGES] = "Privileges";

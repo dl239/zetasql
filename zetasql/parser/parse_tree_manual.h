@@ -4648,6 +4648,72 @@ class ASTCreateTableStmtBase : public ASTCreateStatement {
   const ASTPathExpression* like_table_name_ = nullptr;       // May be NULL.
 };
 
+class ASTCreateUserStatement : public ASTCreateStatement {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind =
+      AST_CREATE_USER_STATEMENT;
+  explicit ASTCreateUserStatement(const ASTNodeKind kConcreteNodeKind)
+      : ASTCreateStatement(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+  const ASTUserList* user_list() const { return user_list_; }
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    fl.AddRequired(&user_list_);
+  }
+
+  const ASTUserList* user_list_ = nullptr;
+}
+
+class ASTUserList final : public ASTNode {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind = AST_USER_LIST;
+
+  ASTUserList() : ASTNode(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+
+  const absl::Span<const ASTUserInfo* const>& users() const {
+    return user_list_;
+  }
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    fl.AddRestAsRepeated(&users_);
+  }
+
+  absl::Span<const ASTUserInfo* const> users_;
+};
+
+
+class ASTUserInfo final : public ASTNode {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind = AST_USER_INFO;
+
+  ASTPrivilege() : ASTNode(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+
+  const ASTIdentifier* user_name() const { return user_name_; }
+  const ASTIdentifier* password() const { return password_; }
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    fl.AddRequired(&user_name_);
+    fl.AddOptional(&language_, AST_IDENTIFIER);
+  }
+
+  const ASTIdentifier* user_name_ = nullptr;
+  const ASTIdentifier* password_ = nullptr;
+};
+
 class ASTCreateTableStatement final : public ASTCreateTableStmtBase {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind = AST_CREATE_TABLE_STATEMENT;
