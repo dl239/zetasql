@@ -3096,6 +3096,7 @@ void Unparser::visitASTAlterAllRowAccessPoliciesStatement(
 }
 
 void Unparser::visitASTCreateUserStatement(const ASTCreateUserStatement* node,
+                                           void* data) {
   print("CREATE");
   print("USER");
   if (node->is_if_not_exists()) print("IF NOT EXISTS");

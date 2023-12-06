@@ -2225,13 +2225,13 @@ user_list:
       }
 
 user_info:
-    identifier opt_password
+    string_literal opt_password
       {
         $$ = MAKE_NODE(ASTUserInfo, @$, {$1, $2});
       }
 
 opt_password:
-    "IDENTIFIED" "BY" identifier
+    "IDENTIFIED" "BY" string_literal
        {
          $$ = $3
        }

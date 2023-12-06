@@ -4666,7 +4666,7 @@ class ASTCreateUserStatement : public ASTCreateStatement {
   }
 
   const ASTUserList* user_list_ = nullptr;
-}
+};
 
 class ASTUserList final : public ASTNode {
  public:
@@ -4678,7 +4678,7 @@ class ASTUserList final : public ASTNode {
       NonRecursiveParseTreeVisitor* visitor) const override;
 
   const absl::Span<const ASTUserInfo* const>& users() const {
-    return user_list_;
+    return users_;
   }
 
  private:
@@ -4695,23 +4695,23 @@ class ASTUserInfo final : public ASTNode {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind = AST_USER_INFO;
 
-  ASTPrivilege() : ASTNode(kConcreteNodeKind) {}
+  ASTUserInfo() : ASTNode(kConcreteNodeKind) {}
   void Accept(ParseTreeVisitor* visitor, void* data) const override;
   zetasql_base::StatusOr<VisitResult> Accept(
       NonRecursiveParseTreeVisitor* visitor) const override;
 
-  const ASTIdentifier* user_name() const { return user_name_; }
-  const ASTIdentifier* password() const { return password_; }
+  const ASTStringLiteral* user_name() const { return user_name_; }
+  const ASTStringLiteral* password() const { return password_; }
 
  private:
   void InitFields() final {
     FieldLoader fl(this);
     fl.AddRequired(&user_name_);
-    fl.AddOptional(&language_, AST_IDENTIFIER);
+    fl.AddOptional(&password_, AST_STRING_LITERAL);
   }
 
-  const ASTIdentifier* user_name_ = nullptr;
-  const ASTIdentifier* password_ = nullptr;
+  const ASTStringLiteral* user_name_ = nullptr;
+  const ASTStringLiteral* password_ = nullptr;
 };
 
 class ASTCreateTableStatement final : public ASTCreateTableStmtBase {
