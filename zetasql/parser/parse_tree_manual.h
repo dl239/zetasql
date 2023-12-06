@@ -4652,8 +4652,7 @@ class ASTCreateUserStatement : public ASTCreateStatement {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind =
       AST_CREATE_USER_STATEMENT;
-  explicit ASTCreateUserStatement(const ASTNodeKind kConcreteNodeKind)
-      : ASTCreateStatement(kConcreteNodeKind) {}
+  explicit ASTCreateUserStatement() : ASTCreateStatement(kConcreteNodeKind) {}
   void Accept(ParseTreeVisitor* visitor, void* data) const override;
   zetasql_base::StatusOr<VisitResult> Accept(
       NonRecursiveParseTreeVisitor* visitor) const override;
