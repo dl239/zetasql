@@ -609,7 +609,9 @@ class Unparser : public ParseTreeVisitor {
   void visitASTBeginEndBlock(const ASTBeginEndBlock* node, void* data) override;
   void visitASTIdentifierList(const ASTIdentifierList* node,
                               void* data) override;
-  void visitASTStringLiteralList(const ASTStringLiteralList* node,
+  void visitASTIdentifierOrString(const ASTIdentifierOrString* node,
+                              void* data) override;
+  void visitASTIdentifierOrStringList(const ASTIdentifierOrStringList* node,
                               void* data) override;
   void visitASTVariableDeclaration(const ASTVariableDeclaration* node,
                                    void* data) override;

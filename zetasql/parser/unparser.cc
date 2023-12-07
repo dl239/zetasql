@@ -3289,9 +3289,18 @@ void Unparser::visitASTIdentifierList(const ASTIdentifierList* node,
   UnparseVectorWithSeparator(node->identifier_list(), data, ", ");
 }
 
-void Unparser::visitASTStringLiteralList(const ASTStringLiteralList* node,
+void Unparser::visitASTIdentifierOrString(const ASTIdentifierOrString* node,
                                       void* data) {
-  UnparseVectorWithSeparator(node->string_literal_list(), data, ", ");
+  if (node->string_value() != nullptr) {
+    node->string_value()->Accept(this, data);
+  } else if (node->identifier_value() != nullptr) {
+    node->identifier_value()->Accept(this, data);
+  }
+}
+
+void Unparser::visitASTIdentifierOrStringList(const ASTIdentifierOrStringList* node,
+                                      void* data) {
+  UnparseVectorWithSeparator(node->identifier_or_string_list(), data, ", ");
 }
 
 void Unparser::visitASTVariableDeclaration(const ASTVariableDeclaration* node,

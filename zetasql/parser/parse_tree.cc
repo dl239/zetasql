@@ -199,6 +199,8 @@ static absl::flat_hash_map<ASTNodeKind, std::string> CreateNodeNamesMap() {
   map[AST_HINT] = "Hint";
   map[AST_IDENTIFIER] = "Identifier";
   map[AST_IDENTIFIER_LIST] = "IdentifierList";
+  map[AST_IDENTIFIER_OR_STRING] = "IdentifierOrString";
+  map[AST_IDENTIFIER_OR_STRING_LIST] = "IdentifierOrStringList";
   map[AST_IF_STATEMENT] = "IfStatement";
   map[AST_IMPORT_STATEMENT] = "ImportStatement";
   map[AST_IN_EXPRESSION] = "InExpression";
@@ -303,7 +305,6 @@ static absl::flat_hash_map<ASTNodeKind, std::string> CreateNodeNamesMap() {
   map[AST_START_BATCH_STATEMENT] = "StartBatchStatement";
   map[AST_STATEMENT_LIST] = "StatementList";
   map[AST_STRING_LITERAL] = "StringLiteral";
-  map[AST_STRING_LITERAL_LIST] = "StringLiteralList";
   map[AST_STRUCT_COLUMN_FIELD] = "StructColumnField";
   map[AST_STRUCT_COLUMN_SCHEMA] = "StructColumnSchema";
   map[AST_STRUCT_CONSTRUCTOR_ARG] = "StructConstructorArg";

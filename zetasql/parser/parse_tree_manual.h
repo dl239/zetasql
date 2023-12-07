@@ -4658,7 +4658,7 @@ class ASTDropUserStatement final : public ASTStatement {
       NonRecursiveParseTreeVisitor* visitor) const override;
   bool is_if_exists() const { return is_if_exists_; }
   void set_is_if_exists(bool value) { is_if_exists_ = value; }
-  const ASTStringLiteralList* user_name_list() const { return user_name_list_; }
+  const ASTIdentifierOrStringList* user_name_list() const { return user_name_list_; }
 
  private:
   void InitFields() final {
@@ -4666,7 +4666,7 @@ class ASTDropUserStatement final : public ASTStatement {
     fl.AddRequired(&user_name_list_);
   }
 
-  const ASTStringLiteralList* user_name_list_ = nullptr;
+  const ASTIdentifierOrStringList* user_name_list_ = nullptr;
   bool is_if_exists_ = false;
 };
 
@@ -4723,7 +4723,7 @@ class ASTUserInfo final : public ASTNode {
   zetasql_base::StatusOr<VisitResult> Accept(
       NonRecursiveParseTreeVisitor* visitor) const override;
 
-  const ASTStringLiteral* user_name() const { return user_name_; }
+  const ASTIdentifierOrString* user_name() const { return user_name_; }
   const ASTStringLiteral* password() const { return password_; }
 
  private:
@@ -4733,7 +4733,7 @@ class ASTUserInfo final : public ASTNode {
     fl.AddOptional(&password_, AST_STRING_LITERAL);
   }
 
-  const ASTStringLiteral* user_name_ = nullptr;
+  const ASTIdentifierOrString* user_name_ = nullptr;
   const ASTStringLiteral* password_ = nullptr;
 };
 
@@ -8149,26 +8149,47 @@ class ASTIdentifierList final : public ASTNode {
   absl::Span<const ASTIdentifier* const> identifier_list_;
 };
 
-class ASTStringLiteralList final : public ASTNode {
+class ASTIdentifierOrStringList final : public ASTNode {
  public:
-  static constexpr ASTNodeKind kConcreteNodeKind = AST_STRING_LITERAL_LIST;
+  static constexpr ASTNodeKind kConcreteNodeKind = AST_IDENTIFIER_OR_STRING_LIST;
 
-  ASTStringLiteralList() : ASTNode(kConcreteNodeKind) {}
+  ASTIdentifierOrStringList() : ASTNode(kConcreteNodeKind) {}
   void Accept(ParseTreeVisitor* visitor, void* data) const override;
   zetasql_base::StatusOr<VisitResult> Accept(
       NonRecursiveParseTreeVisitor* visitor) const override;
 
-  // Guaranteed by the parser to never be empty.
-  absl::Span<const ASTStringLiteral* const> string_literal_list() const {
-    return string_literal_list_;
+  absl::Span<const ASTIdentifierOrString* const> identifier_or_string_list() const {
+    return identifier_or_string_list_;
   }
 
  private:
   void InitFields() final {
     FieldLoader fl(this);
-    fl.AddRestAsRepeated(&string_literal_list_);
+    fl.AddRestAsRepeated(&identifier_or_string_list_);
   }
-  absl::Span<const ASTStringLiteral* const> string_literal_list_;
+  absl::Span<const ASTIdentifierOrString* const> identifier_or_string_list_;
+};
+
+class ASTIdentifierOrString final : public ASTNode {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind = AST_IDENTIFIER_OR_STRING;
+
+  ASTIdentifierOrString() : ASTNode(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+  const ASTStringLiteral* string_value() const { return string_value_; }
+  const ASTIdentifier* identifier_value() const { return identifier_value_; }
+
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    fl.AddOptional(&string_value_, AST_STRING_LITERAL);
+    fl.AddOptional(&identifier_value_, AST_IDENTIFIER);
+  }
+  const ASTStringLiteral* string_value_ = nullptr;
+  const ASTIdentifier* identifier_value_ = nullptr;
 };
 
 class ASTVariableDeclaration final : public ASTScriptStatement {

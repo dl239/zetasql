@@ -1110,7 +1110,6 @@ using zetasql::ASTDropStatement;
 %type <node> variable_declaration
 %type <node> opt_default_expression
 %type <node> identifier_list
-%type <node> string_literal_list
 %type <node> path_expression_list
 %type <node> path_expression_list_with_opt_parens
 %type <node> set_statement
@@ -1262,6 +1261,8 @@ using zetasql::ASTDropStatement;
 %type <expression> dashed_path_expression
 %type <expression> maybe_dashed_path_expression
 %type <node> path_expression_or_string
+%type <node> identifier_or_string_list
+%type <node> identifier_or_string
 %type <expression> possibly_cast_int_literal_or_parameter
 %type <node> possibly_empty_column_list
 %type <node> privilege
@@ -2227,7 +2228,7 @@ user_list:
     ;
 
 user_info:
-    string_literal opt_password
+    identifier_or_string opt_password
       {
         $$ = MAKE_NODE(ASTUserInfo, @$, {$1, $2});
       }
@@ -2407,6 +2408,28 @@ opt_as_sql_function_body_or_string:
     | /* Nothing */
       {
         $$ = nullptr;
+      }
+    ;
+
+identifier_or_string_list:
+    identifier_or_string
+      {
+        $$ = MAKE_NODE(ASTIdentifierOrStringList, @$, {$1});
+      }
+    | identifier_or_string_list "," identifier_or_string
+      {
+        $$ = WithEndLocation(WithExtraChildren($1, {$3}), @$);
+      }
+    ;
+
+identifier_or_string:
+    identifier
+      {
+        $$ = MAKE_NODE(ASTIdentifierOrString, @$, {$1});
+      }
+    | string_literal
+      {
+        $$ = MAKE_NODE(ASTIdentifierOrString, @$, {$1});
       }
     ;
 
@@ -8519,7 +8542,7 @@ drop_statement:
         drop_row_access_policy->set_is_if_exists($5);
         $$ = drop_row_access_policy;
       }
-    | "DROP" "USER" opt_if_exists string_literal_list
+    | "DROP" "USER" opt_if_exists identifier_or_string_list
       {
         auto* drop = MAKE_NODE(ASTDropUserStatement, @$, {$4});
         drop->set_is_if_exists($3);
@@ -8867,17 +8890,6 @@ identifier_list:
       $$ = MAKE_NODE(ASTIdentifierList, @$, {$1});
     }
     | identifier_list "," identifier
-    {
-      $$ = WithEndLocation(WithExtraChildren($1, {$3}), @$);
-    }
-    ;
-
-string_literal_list:
-    string_literal
-    {
-      $$ = MAKE_NODE(ASTStringLiteralList, @$, {$1});
-    }
-    | string_literal_list "," string_literal
     {
       $$ = WithEndLocation(WithExtraChildren($1, {$3}), @$);
     }
