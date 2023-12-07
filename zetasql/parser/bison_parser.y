@@ -2223,17 +2223,19 @@ user_list:
       {
         $$ = WithEndLocation(WithExtraChildren($1, {$3}), @$);
       }
+    ;
 
 user_info:
     string_literal opt_password
       {
         $$ = MAKE_NODE(ASTUserInfo, @$, {$1, $2});
       }
+    ;
 
 opt_password:
     "IDENTIFIED" "BY" string_literal
        {
-         $$ = $3
+         $$ = $3;
        }
     | /* Nothing */ { $$ = nullptr; }
     ;
@@ -9147,7 +9149,7 @@ next_statement_kind_without_hint:
       {
         $$ = zetasql::ASTCreateTableFunctionStatement::kConcreteNodeKind;
       }
-    | "CREATE" next_statement_kind_create_modifiers "USER"
+    | "CREATE" "USER" opt_if_not_exists 
       {
         $$ = zetasql::ASTCreateUserStatement::kConcreteNodeKind;
       }

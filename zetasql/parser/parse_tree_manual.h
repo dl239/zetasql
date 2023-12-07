@@ -4648,14 +4648,16 @@ class ASTCreateTableStmtBase : public ASTCreateStatement {
   const ASTPathExpression* like_table_name_ = nullptr;       // May be NULL.
 };
 
-class ASTCreateUserStatement : public ASTCreateStatement {
+class ASTCreateUserStatement : public ASTStatement {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind =
       AST_CREATE_USER_STATEMENT;
-  explicit ASTCreateUserStatement() : ASTCreateStatement(kConcreteNodeKind) {}
+  explicit ASTCreateUserStatement() : ASTStatement(kConcreteNodeKind) {}
   void Accept(ParseTreeVisitor* visitor, void* data) const override;
   zetasql_base::StatusOr<VisitResult> Accept(
       NonRecursiveParseTreeVisitor* visitor) const override;
+  bool is_if_not_exists() const { return is_if_not_exists_; }
+  void set_is_if_not_exists(bool value) { is_if_not_exists_ = value; }
   const ASTUserList* user_list() const { return user_list_; }
 
  private:
@@ -4664,6 +4666,7 @@ class ASTCreateUserStatement : public ASTCreateStatement {
     fl.AddRequired(&user_list_);
   }
 
+  bool is_if_not_exists_ = false;
   const ASTUserList* user_list_ = nullptr;
 };
 
@@ -4688,7 +4691,6 @@ class ASTUserList final : public ASTNode {
 
   absl::Span<const ASTUserInfo* const> users_;
 };
-
 
 class ASTUserInfo final : public ASTNode {
  public:

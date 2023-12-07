@@ -505,8 +505,8 @@ class Unparser : public ParseTreeVisitor {
                                    void* data) override;
   void visitASTMergeStatement(const ASTMergeStatement* node,
                               void* data) override;
-  void visitASTUserList(const ASTUserList* node, void* data);
-  void visitASTUserInfo(const ASTUserInfo* node, void* data);
+  void visitASTUserList(const ASTUserList* node, void* data) override;
+  void visitASTUserInfo(const ASTUserInfo* node, void* data) override;
   void visitASTPrimaryKey(const ASTPrimaryKey* node, void* data) override;
   void visitASTPrivilege(const ASTPrivilege* node, void* data) override;
   void visitASTPrivileges(const ASTPrivileges* node, void* data) override;
