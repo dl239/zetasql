@@ -1110,6 +1110,7 @@ using zetasql::ASTDropStatement;
 %type <node> variable_declaration
 %type <node> opt_default_expression
 %type <node> identifier_list
+%type <node> string_literal_list
 %type <node> path_expression_list
 %type <node> path_expression_list_with_opt_parens
 %type <node> set_statement
@@ -8518,7 +8519,7 @@ drop_statement:
         drop_row_access_policy->set_is_if_exists($5);
         $$ = drop_row_access_policy;
       }
-    | "DROP" "USER" opt_if_exists string_literal
+    | "DROP" "USER" opt_if_exists string_literal_list
       {
         auto* drop = MAKE_NODE(ASTDropUserStatement, @$, {$4});
         drop->set_is_if_exists($3);
@@ -8866,6 +8867,17 @@ identifier_list:
       $$ = MAKE_NODE(ASTIdentifierList, @$, {$1});
     }
     | identifier_list "," identifier
+    {
+      $$ = WithEndLocation(WithExtraChildren($1, {$3}), @$);
+    }
+    ;
+
+string_literal_list:
+    string_literal
+    {
+      $$ = MAKE_NODE(ASTStringLiteralList, @$, {$1});
+    }
+    | string_literal_list "," string_literal
     {
       $$ = WithEndLocation(WithExtraChildren($1, {$3}), @$);
     }

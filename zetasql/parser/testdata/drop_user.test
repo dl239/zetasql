@@ -1,8 +1,28 @@
 drop user 'root';
 --
 DropUserStatement [0-16]
-  StringLiteral('root') [10-16]
+  StringLiteralList [10-16]
+    StringLiteral('root') [10-16]
 --
 DROP USER 'root'
 ==
 
+drop user 'user1', 'user2';
+--
+DropUserStatement [0-26]
+  StringLiteralList [10-26]
+    StringLiteral('user1') [10-17]
+    StringLiteral('user2') [19-26]
+--
+DROP USER 'user1', 'user2'
+==
+
+drop user if exists 'user1', 'user2';
+--
+DropUserStatement [0-36]
+  StringLiteralList [20-36]
+    StringLiteral('user1') [20-27]
+    StringLiteral('user2') [29-36]
+--
+DROP USER IF EXISTS 'user1', 'user2'
+==

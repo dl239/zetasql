@@ -303,6 +303,7 @@ static absl::flat_hash_map<ASTNodeKind, std::string> CreateNodeNamesMap() {
   map[AST_START_BATCH_STATEMENT] = "StartBatchStatement";
   map[AST_STATEMENT_LIST] = "StatementList";
   map[AST_STRING_LITERAL] = "StringLiteral";
+  map[AST_STRING_LITERAL_LIST] = "StringLiteralList";
   map[AST_STRUCT_COLUMN_FIELD] = "StructColumnField";
   map[AST_STRUCT_COLUMN_SCHEMA] = "StructColumnSchema";
   map[AST_STRUCT_CONSTRUCTOR_ARG] = "StructConstructorArg";

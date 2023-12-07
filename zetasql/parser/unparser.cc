@@ -3100,7 +3100,7 @@ void Unparser::visitASTDropUserStatement(const ASTDropUserStatement* node,
   print("DROP");
   print("USER");
   if (node->is_if_exists()) print("IF EXISTS");
-  node->user_name()->Accept(this, data);
+  node->user_name_list()->Accept(this, data);
 }
 
 void Unparser::visitASTCreateUserStatement(const ASTCreateUserStatement* node,
@@ -3287,6 +3287,11 @@ void Unparser::visitASTCheckConstraint(const ASTCheckConstraint* node,
 void Unparser::visitASTIdentifierList(const ASTIdentifierList* node,
                                       void* data) {
   UnparseVectorWithSeparator(node->identifier_list(), data, ", ");
+}
+
+void Unparser::visitASTStringLiteralList(const ASTStringLiteralList* node,
+                                      void* data) {
+  UnparseVectorWithSeparator(node->string_literal_list(), data, ", ");
 }
 
 void Unparser::visitASTVariableDeclaration(const ASTVariableDeclaration* node,
