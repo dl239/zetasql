@@ -153,6 +153,7 @@ static absl::flat_hash_map<ASTNodeKind, std::string> CreateNodeNamesMap() {
   map[AST_DROP_ROW_ACCESS_POLICY_STATEMENT] = "DropRowAccessPolicyStatement";
   map[AST_DROP_STATEMENT] = "DropStatement";
   map[AST_DROP_MATERIALIZED_VIEW_STATEMENT] = "DropMaterializedViewStatement";
+  map[AST_DROP_USER_STATEMENT] = "DropUserStatement";
   map[AST_ELSEIF_CLAUSE] = "ElseIf";
   map[AST_ELSEIF_CLAUSE_LIST] = "ElseIfList";
   map[AST_EXCEPTION_HANDLER] = "ExceptionHandler";

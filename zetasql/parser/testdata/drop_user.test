@@ -1,0 +1,8 @@
+drop user 'root';
+--
+DropUserStatement [0-16]
+  StringLiteral('root') [10-16]
+--
+DROP USER 'root'
+==
+

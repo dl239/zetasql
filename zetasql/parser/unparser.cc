@@ -3095,6 +3095,14 @@ void Unparser::visitASTAlterAllRowAccessPoliciesStatement(
   node->alter_action()->Accept(this, data);
 }
 
+void Unparser::visitASTDropUserStatement(const ASTDropUserStatement* node,
+                                           void* data) {
+  print("DROP");
+  print("USER");
+  if (node->is_if_exists()) print("IF EXISTS");
+  node->user_name()->Accept(this, data);
+}
+
 void Unparser::visitASTCreateUserStatement(const ASTCreateUserStatement* node,
                                            void* data) {
   print("CREATE");

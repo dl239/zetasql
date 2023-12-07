@@ -8518,6 +8518,12 @@ drop_statement:
         drop_row_access_policy->set_is_if_exists($5);
         $$ = drop_row_access_policy;
       }
+    | "DROP" "USER" opt_if_exists string_literal
+      {
+        auto* drop = MAKE_NODE(ASTDropUserStatement, @$, {$4});
+        drop->set_is_if_exists($3);
+        $$ = drop;
+      }
     | "DROP" table_or_table_function opt_if_exists maybe_dashed_path_expression
       opt_function_parameters
       {
@@ -9041,6 +9047,8 @@ next_statement_kind_without_hint:
       }
     | "DROP" "ROW" "ACCESS" "POLICY"
       { $$ = zetasql::ASTDropRowAccessPolicyStatement::kConcreteNodeKind; }
+    | "DROP" "USER"
+      { $$ = zetasql::ASTDropUserStatement::kConcreteNodeKind; }
     | "DROP" table_or_table_function
       {
         if ($2 == TableOrTableFunctionKeywords::kTableAndFunctionKeywords) {

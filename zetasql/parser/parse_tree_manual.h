@@ -4648,6 +4648,28 @@ class ASTCreateTableStmtBase : public ASTCreateStatement {
   const ASTPathExpression* like_table_name_ = nullptr;       // May be NULL.
 };
 
+class ASTDropUserStatement final : public ASTStatement {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind =
+      AST_DROP_USER_STATEMENT;
+  explicit ASTDropUserStatement() : ASTStatement(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+  bool is_if_exists() const { return is_if_exists_; }
+  void set_is_if_exists(bool value) { is_if_exists_ = value; }
+  const ASTStringLiteral* user_name() const { return user_name_; }
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    fl.AddRequired(&user_name_);
+  }
+
+  const ASTStringLiteral* user_name_ = nullptr;
+  bool is_if_exists_ = false;
+};
+
 class ASTCreateUserStatement final : public ASTStatement {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind =
