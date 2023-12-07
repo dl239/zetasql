@@ -1,0 +1,55 @@
+create user 'root' identified by '123456';
+--
+CreateUserStatement [0-41]
+  UserList [12-41]
+    UserInfo [12-41]
+      StringLiteral('root') [12-18]
+      StringLiteral('123456') [33-41]
+--
+CREATE USER 'root' IDENTIFIED BY '123456'
+==
+
+create user 'root';
+--
+CreateUserStatement [0-18]
+  UserList [12-18]
+    UserInfo [12-18]
+      StringLiteral('root') [12-18]
+--
+CREATE USER 'root'
+==
+
+create user if not exists 'root';
+--
+CreateUserStatement [0-32]
+  UserList [26-32]
+    UserInfo [26-32]
+      StringLiteral('root') [26-32]
+--
+CREATE USER IF NOT EXISTS 'root'
+==
+
+create user 'user1', 'user2';
+--
+CreateUserStatement [0-28]
+  UserList [12-28]
+    UserInfo [12-19]
+      StringLiteral('user1') [12-19]
+    UserInfo [21-28]
+      StringLiteral('user2') [21-28]
+--
+CREATE USER 'user1', 'user2'
+==
+
+create user 'user1', 'user2' identified by 'abc';
+--
+CreateUserStatement [0-48]
+  UserList [12-48]
+    UserInfo [12-19]
+      StringLiteral('user1') [12-19]
+    UserInfo [21-48]
+      StringLiteral('user2') [21-28]
+      StringLiteral('abc') [43-48]
+--
+CREATE USER 'user1', 'user2' IDENTIFIED BY 'abc'
+==
