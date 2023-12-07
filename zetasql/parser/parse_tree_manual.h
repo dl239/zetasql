@@ -4648,7 +4648,7 @@ class ASTCreateTableStmtBase : public ASTCreateStatement {
   const ASTPathExpression* like_table_name_ = nullptr;       // May be NULL.
 };
 
-class ASTCreateUserStatement : public ASTStatement {
+class ASTCreateUserStatement final : public ASTStatement {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind =
       AST_CREATE_USER_STATEMENT;
