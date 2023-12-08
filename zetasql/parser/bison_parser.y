@@ -1835,6 +1835,12 @@ alter_statement:
         node->set_is_if_exists($3);
         $$ = node;
       }
+    | "ALTER" "USER" opt_if_exists user_list
+      {
+        auto* node = MAKE_NODE(ASTAlterUserStatement, @$, {$4});
+        node->set_is_if_exists($3);
+        $$ = node;
+      }
     | "ALTER" schema_object_kind opt_if_exists path_expression
       alter_action_list
       {
@@ -9131,6 +9137,8 @@ next_statement_kind_without_hint:
       { $$ = zetasql::ASTAlterTableStatement::kConcreteNodeKind; }
     | "ALTER" "ROW"
       { $$ = zetasql::ASTAlterRowAccessPolicyStatement::kConcreteNodeKind; }
+    | "ALTER" "USER"
+      { $$ = zetasql::ASTAlterUserStatement::kConcreteNodeKind; }
     | "ALTER" "ALL" "ROW" "ACCESS" "POLICIES"
       { $$ =
           zetasql::ASTAlterAllRowAccessPoliciesStatement::kConcreteNodeKind; }

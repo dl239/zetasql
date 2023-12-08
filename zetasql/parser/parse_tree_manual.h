@@ -4670,6 +4670,28 @@ class ASTDropUserStatement final : public ASTStatement {
   bool is_if_exists_ = false;
 };
 
+class ASTAlterUserStatement final : public ASTStatement {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind =
+      AST_ALTER_USER_STATEMENT;
+  explicit ASTAlterUserStatement() : ASTStatement(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+  bool is_if_exists() const { return is_if_exists_; }
+  void set_is_if_exists(bool value) { is_if_exists_ = value; }
+  const ASTUserList* user_list() const { return user_list_; }
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    fl.AddRequired(&user_list_);
+  }
+
+  bool is_if_exists_ = false;
+  const ASTUserList* user_list_ = nullptr;
+};
+
 class ASTCreateUserStatement final : public ASTStatement {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind =

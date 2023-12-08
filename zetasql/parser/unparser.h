@@ -159,6 +159,8 @@ class Unparser : public ParseTreeVisitor {
                                     void* data) override;
   void visitASTCreateUserStatement(const ASTCreateUserStatement* node,
                                     void* data) override;
+  void visitASTAlterUserStatement(const ASTAlterUserStatement* node,
+                                    void* data) override;
   void visitASTDropUserStatement(const ASTDropUserStatement* node,
                                     void* data) override;
   void visitASTCreateModelStatement(const ASTCreateModelStatement* node,

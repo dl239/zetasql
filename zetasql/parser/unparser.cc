@@ -3100,7 +3100,19 @@ void Unparser::visitASTDropUserStatement(const ASTDropUserStatement* node,
   print("DROP");
   print("USER");
   if (node->is_if_exists()) print("IF EXISTS");
-  node->user_name_list()->Accept(this, data);
+  if (node->user_name_list() != nullptr) {
+    node->user_name_list()->Accept(this, data);
+  }
+}
+
+void Unparser::visitASTAlterUserStatement(const ASTAlterUserStatement* node,
+                                           void* data) {
+  print("ALTER");
+  print("USER");
+  if (node->is_if_exists()) print("IF EXISTS");
+  if (node->user_list() != nullptr) {
+    node->user_list()->Accept(this, data);
+  }
 }
 
 void Unparser::visitASTCreateUserStatement(const ASTCreateUserStatement* node,

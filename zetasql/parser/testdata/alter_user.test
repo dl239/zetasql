@@ -1,0 +1,95 @@
+alter user 'root' identified by '123456';
+--
+AlterUserStatement [0-40]
+  UserList [11-40]
+    UserInfo [11-40]
+      IdentifierOrString [11-17]
+        StringLiteral('root') [11-17]
+      StringLiteral('123456') [32-40]
+--
+ALTER USER 'root' IDENTIFIED BY '123456'
+==
+
+alter user root identified by '123456';
+--
+AlterUserStatement [0-38]
+  UserList [11-38]
+    UserInfo [11-38]
+      IdentifierOrString [11-15]
+        Identifier(root) [11-15]
+      StringLiteral('123456') [30-38]
+--
+ALTER USER root IDENTIFIED BY '123456'
+==
+
+alter user root identified by 123456;
+--
+ERROR: Syntax error: Expected string literal but got integer literal "123456" [at 1:31]
+alter user root identified by 123456;
+                              ^
+==
+
+alter user 'root';
+--
+AlterUserStatement [0-17]
+  UserList [11-17]
+    UserInfo [11-17]
+      IdentifierOrString [11-17]
+        StringLiteral('root') [11-17]
+--
+ALTER USER 'root'
+==
+
+alter user if exists 'root';
+--
+AlterUserStatement [0-27]
+  UserList [21-27]
+    UserInfo [21-27]
+      IdentifierOrString [21-27]
+        StringLiteral('root') [21-27]
+--
+ALTER USER IF EXISTS 'root'
+==
+
+alter user 'user1', 'user2';
+--
+AlterUserStatement [0-27]
+  UserList [11-27]
+    UserInfo [11-18]
+      IdentifierOrString [11-18]
+        StringLiteral('user1') [11-18]
+    UserInfo [20-27]
+      IdentifierOrString [20-27]
+        StringLiteral('user2') [20-27]
+--
+ALTER USER 'user1', 'user2'
+==
+
+alter user 'user1', user2;
+--
+AlterUserStatement [0-25]
+  UserList [11-25]
+    UserInfo [11-18]
+      IdentifierOrString [11-18]
+        StringLiteral('user1') [11-18]
+    UserInfo [20-25]
+      IdentifierOrString [20-25]
+        Identifier(user2) [20-25]
+--
+ALTER USER 'user1', user2
+==
+
+alter user 'user1', 'user2' identified by 'abc';
+--
+AlterUserStatement [0-47]
+  UserList [11-47]
+    UserInfo [11-18]
+      IdentifierOrString [11-18]
+        StringLiteral('user1') [11-18]
+    UserInfo [20-47]
+      IdentifierOrString [20-27]
+        StringLiteral('user2') [20-27]
+      StringLiteral('abc') [42-47]
+--
+ALTER USER 'user1', 'user2' IDENTIFIED BY 'abc'
+==

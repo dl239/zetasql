@@ -76,6 +76,7 @@ static absl::flat_hash_map<ASTNodeKind, std::string> CreateNodeNamesMap() {
   map[AST_ALTER_TABLE_STATEMENT] = "AlterTableStatement";
   map[AST_ALTER_SCHEMA_STATEMENT]= "AlterSchemaStatement";
   map[AST_ALTER_VIEW_STATEMENT] = "AlterViewStatement";
+  map[AST_ALTER_USER_STATEMENT] = "AlterUserStatement";
   map[AST_ANALYTIC_FUNCTION_CALL] = "AnalyticFunctionCall";
   map[AST_ANALYZE_STATEMENT] = "AnalyzeStatement";
   map[AST_AND_EXPR] = "AndExpr";
