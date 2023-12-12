@@ -4671,14 +4671,17 @@ class ASTDropUserStatement final : public ASTDdlStatement {
   bool is_if_exists_ = false;
 };
 
-class ASTCreateUserStatement final : public ASTCreateTableStmtBase {
+class ASTCreateUserStatement final : public ASTCreateStatement {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind =
       AST_CREATE_USER_STATEMENT;
-  explicit ASTCreateUserStatement() : ASTCreateTableStmtBase(kConcreteNodeKind) {}
+  explicit ASTCreateUserStatement() : ASTCreateStatement(kConcreteNodeKind) {}
   void Accept(ParseTreeVisitor* visitor, void* data) const override;
   zetasql_base::StatusOr<VisitResult> Accept(
       NonRecursiveParseTreeVisitor* visitor) const override;
+  const ASTPathExpression* name() const { return name_; }
+  const ASTOptionsList* options_list() const { return options_list_; }
+  const ASTPathExpression* GetDdlTarget() const override { return name_; }
 
  private:
   void InitFields() final {
@@ -4686,6 +4689,9 @@ class ASTCreateUserStatement final : public ASTCreateTableStmtBase {
     fl.AddRequired(&name_);
     fl.AddOptional(&options_list_, AST_OPTIONS_LIST);
   }
+
+  const ASTPathExpression* name_ = nullptr;
+  const ASTOptionsList* options_list_ = nullptr;
 
 };
 
