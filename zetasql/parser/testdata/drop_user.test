@@ -1,55 +1,17 @@
-drop user 'root';
---
-DropUserStatement [0-16]
-  IdentifierOrStringList [10-16]
-    IdentifierOrString [10-16]
-      StringLiteral('root') [10-16]
---
-DROP USER 'root'
-==
-
 drop user root;
 --
 DropUserStatement [0-14]
-  IdentifierOrStringList [10-14]
-    IdentifierOrString [10-14]
-      Identifier(root) [10-14]
+  PathExpression [10-14]
+    Identifier(root) [10-14]
 --
 DROP USER root
 ==
 
-drop user 'user1', 'user2';
+drop user if exists user1;
 --
-DropUserStatement [0-26]
-  IdentifierOrStringList [10-26]
-    IdentifierOrString [10-17]
-      StringLiteral('user1') [10-17]
-    IdentifierOrString [19-26]
-      StringLiteral('user2') [19-26]
+DropUserStatement [0-25]
+  PathExpression [20-25]
+    Identifier(user1) [20-25]
 --
-DROP USER 'user1', 'user2'
-==
-
-drop user user1, 'user2';
---
-DropUserStatement [0-24]
-  IdentifierOrStringList [10-24]
-    IdentifierOrString [10-15]
-      Identifier(user1) [10-15]
-    IdentifierOrString [17-24]
-      StringLiteral('user2') [17-24]
---
-DROP USER user1, 'user2'
-==
-
-drop user if exists 'user1', 'user2';
---
-DropUserStatement [0-36]
-  IdentifierOrStringList [20-36]
-    IdentifierOrString [20-27]
-      StringLiteral('user1') [20-27]
-    IdentifierOrString [29-36]
-      StringLiteral('user2') [29-36]
---
-DROP USER IF EXISTS 'user1', 'user2'
+DROP USER IF EXISTS user1
 ==

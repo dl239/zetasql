@@ -3100,9 +3100,7 @@ void Unparser::visitASTDropUserStatement(const ASTDropUserStatement* node,
   print("DROP");
   print("USER");
   if (node->is_if_exists()) print("IF EXISTS");
-  if (node->user_name_list() != nullptr) {
-    node->user_name_list()->Accept(this, data);
-  }
+  node->name()->Accept(this, data);
 }
 
 void Unparser::visitASTAlterUserStatement(const ASTAlterUserStatement* node,
@@ -3110,8 +3108,10 @@ void Unparser::visitASTAlterUserStatement(const ASTAlterUserStatement* node,
   print("ALTER");
   print("USER");
   if (node->is_if_exists()) print("IF EXISTS");
-  if (node->user_list() != nullptr) {
-    node->user_list()->Accept(this, data);
+  node->name()->Accept(this, data);
+  if (node->options_list() != nullptr) {
+    print("OPTIONS");
+    node->options_list()->Accept(this, data);
   }
 }
 
@@ -3120,20 +3120,10 @@ void Unparser::visitASTCreateUserStatement(const ASTCreateUserStatement* node,
   print("CREATE");
   print("USER");
   if (node->is_if_not_exists()) print("IF NOT EXISTS");
-  if (node->user_list() != nullptr) {
-    node->user_list()->Accept(this, data);
-  }
-}
-
-void Unparser::visitASTUserList(const ASTUserList* node, void* data) {
-  UnparseChildrenWithSeparator(node, data, ",");
-}
-
-void Unparser::visitASTUserInfo(const ASTUserInfo* node, void* data) {
-  node->user_name()->Accept(this, data);
-  if (node->password() != nullptr) {
-    print("IDENTIFIED BY");
-    node->password()->Accept(this, data);
+  node->name()->Accept(this, data);
+  if (node->options_list() != nullptr) {
+    print("OPTIONS");
+    node->options_list()->Accept(this, data);
   }
 }
 
@@ -3299,20 +3289,6 @@ void Unparser::visitASTCheckConstraint(const ASTCheckConstraint* node,
 void Unparser::visitASTIdentifierList(const ASTIdentifierList* node,
                                       void* data) {
   UnparseVectorWithSeparator(node->identifier_list(), data, ", ");
-}
-
-void Unparser::visitASTIdentifierOrString(const ASTIdentifierOrString* node,
-                                      void* data) {
-  if (node->string_value() != nullptr) {
-    node->string_value()->Accept(this, data);
-  } else if (node->identifier_value() != nullptr) {
-    node->identifier_value()->Accept(this, data);
-  }
-}
-
-void Unparser::visitASTIdentifierOrStringList(const ASTIdentifierOrStringList* node,
-                                      void* data) {
-  UnparseVectorWithSeparator(node->identifier_or_string_list(), data, ", ");
 }
 
 void Unparser::visitASTVariableDeclaration(const ASTVariableDeclaration* node,

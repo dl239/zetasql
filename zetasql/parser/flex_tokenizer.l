@@ -533,8 +533,6 @@ module { return BisonParserImpl::token::KW_MODULE; }
 natural { return BisonParserImpl::token::KW_NATURAL; }
 new { return BisonParserImpl::token::KW_NEW; }
 user { return BisonParserImpl::token::KW_USER; }
-identified { return BisonParserImpl::token::KW_IDENTIFIED; }
-password { return BisonParserImpl::token::KW_PASSWORD; }
 no { return BisonParserImpl::token::KW_NO; }
 {not} { return BisonParserImpl::token::KW_NOT; }
  /* This returns a different token because returning KW_NOT would confuse the
