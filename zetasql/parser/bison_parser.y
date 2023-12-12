@@ -1813,6 +1813,8 @@ schema_object_kind:
       { $$ = zetasql::SchemaObjectKind::kView; }
     | "DEPLOYMENT"
       { $$ = zetasql::SchemaObjectKind::kDeployment; }
+    | "USER"
+      { $$ = zetasql::SchemaObjectKind::kUser; }
     ;
 
 alter_statement:
@@ -1825,12 +1827,6 @@ alter_statement:
         }
         zetasql::ASTAlterTableStatement* node = MAKE_NODE(
           ASTAlterTableStatement, @$, {$4, $5});
-        node->set_is_if_exists($3);
-        $$ = node;
-      }
-    | "ALTER" "USER" opt_if_exists path_expression opt_options_list
-      {
-        auto* node = MAKE_NODE(ASTAlterUserStatement, @$, {$4, $5});
         node->set_is_if_exists($3);
         $$ = node;
       }
@@ -1848,6 +1844,8 @@ alter_statement:
           node = MAKE_NODE(ASTAlterViewStatement, @$);
         } else if ($2 == zetasql::SchemaObjectKind::kMaterializedView) {
           node = MAKE_NODE(ASTAlterMaterializedViewStatement, @$);
+        } else if ($2 == zetasql::SchemaObjectKind::kUser) {
+          node = MAKE_NODE(ASTAlterUserStatement, @$);
         } else {
           YYERROR_AND_ABORT_AT(@2, absl::StrCat("ALTER ", absl::AsciiStrToUpper(
             parser->GetInputText(@2)), " is not supported"));
@@ -8491,12 +8489,6 @@ drop_statement:
         drop_row_access_policy->set_is_if_exists($5);
         $$ = drop_row_access_policy;
       }
-    | "DROP" "USER" opt_if_exists path_expression
-      {
-        auto* drop = MAKE_NODE(ASTDropUserStatement, @$, {$4});
-        drop->set_is_if_exists($3);
-        $$ = drop;
-      }
     | "DROP" table_or_table_function opt_if_exists maybe_dashed_path_expression
       opt_function_parameters
       {
@@ -8564,6 +8556,10 @@ drop_statement:
                 MAKE_NODE(ASTDropFunctionStatement, @$, {$4, $5});
             drop_function->set_is_if_exists($3);
             $$ = drop_function;
+        } else if ($2 == zetasql::SchemaObjectKind::kUser) {
+            auto* drop = MAKE_NODE(ASTDropUserStatement, @$, {$4});
+            drop->set_is_if_exists($3);
+            $$ = drop;
         } else {
           if ($5 != nullptr) {
             YYERROR_AND_ABORT_AT(@5,
@@ -9020,8 +9016,6 @@ next_statement_kind_without_hint:
       }
     | "DROP" "ROW" "ACCESS" "POLICY"
       { $$ = zetasql::ASTDropRowAccessPolicyStatement::kConcreteNodeKind; }
-    | "DROP" "USER"
-      { $$ = zetasql::ASTDropUserStatement::kConcreteNodeKind; }
     | "DROP" table_or_table_function
       {
         if ($2 == TableOrTableFunctionKeywords::kTableAndFunctionKeywords) {
@@ -9040,6 +9034,9 @@ next_statement_kind_without_hint:
             break;
           case zetasql::SchemaObjectKind::kMaterializedView:
             $$ = zetasql::ASTDropMaterializedViewStatement::kConcreteNodeKind;
+            break;
+          case zetasql::SchemaObjectKind::kUser:
+            $$ = zetasql::ASTDropUserStatement::kConcreteNodeKind;
             break;
           default:
             $$ = zetasql::ASTDropStatement::kConcreteNodeKind;

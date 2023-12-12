@@ -1697,6 +1697,8 @@ absl::string_view SchemaObjectKindToName(SchemaObjectKind schema_object_kind) {
       return "VIEW";
     case SchemaObjectKind::kDeployment:
       return "DEPLOYMENT";
+    case SchemaObjectKind::kUser:
+      return "USER";
     default:
       return "<INVALID SCHEMA OBJECT KIND>";
   }

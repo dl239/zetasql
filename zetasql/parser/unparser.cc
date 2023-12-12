@@ -3105,14 +3105,8 @@ void Unparser::visitASTDropUserStatement(const ASTDropUserStatement* node,
 
 void Unparser::visitASTAlterUserStatement(const ASTAlterUserStatement* node,
                                            void* data) {
-  print("ALTER");
-  print("USER");
-  if (node->is_if_exists()) print("IF EXISTS");
-  node->name()->Accept(this, data);
-  if (node->options_list() != nullptr) {
-    print("OPTIONS");
-    node->options_list()->Accept(this, data);
-  }
+  print("ALTER USER");
+  VisitAlterStatementBase(node, data);
 }
 
 void Unparser::visitASTCreateUserStatement(const ASTCreateUserStatement* node,

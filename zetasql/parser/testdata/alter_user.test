@@ -1,30 +1,36 @@
 alter user root;
 --
-AlterUserStatement [0-15]
-  PathExpression [11-15]
-    Identifier(root) [11-15]
---
-ALTER USER root
+ERROR: Syntax error: Unexpected ";" [at 1:16]
+alter user root;
+               ^
 ==
 
-alter user if exists root;
+alter user root set options (password='abc');
 --
-AlterUserStatement [0-25]
+AlterUserStatement [0-44]
+  PathExpression [11-15]
+    Identifier(root) [11-15]
+  AlterActionList [16-44]
+    SetOptionsOperation [16-44]
+      OptionsList [28-44]
+        OptionsEntry [29-43]
+          Identifier(password) [29-37]
+          StringLiteral('abc') [38-43]
+--
+ALTER USER root SET OPTIONS(password = 'abc')
+==
+
+alter user if exists root set options (password='abc');
+--
+AlterUserStatement(is_if_exists) [0-54]
   PathExpression [21-25]
     Identifier(root) [21-25]
+  AlterActionList [26-54]
+    SetOptionsOperation [26-54]
+      OptionsList [38-54]
+        OptionsEntry [39-53]
+          Identifier(password) [39-47]
+          StringLiteral('abc') [48-53]
 --
-ALTER USER IF EXISTS root
-==
-
-alter user root options (password='abc');
---
-AlterUserStatement [0-40]
-  PathExpression [11-15]
-    Identifier(root) [11-15]
-  OptionsList [24-40]
-    OptionsEntry [25-39]
-      Identifier(password) [25-33]
-      StringLiteral('abc') [34-39]
---
-ALTER USER root OPTIONS(password = 'abc')
+ALTER USER IF EXISTS root SET OPTIONS(password = 'abc')
 ==

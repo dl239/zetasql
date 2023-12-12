@@ -4671,31 +4671,6 @@ class ASTDropUserStatement final : public ASTDdlStatement {
   bool is_if_exists_ = false;
 };
 
-class ASTAlterUserStatement final : public ASTStatement {
- public:
-  static constexpr ASTNodeKind kConcreteNodeKind =
-      AST_ALTER_USER_STATEMENT;
-  ASTAlterUserStatement() : ASTStatement(kConcreteNodeKind) {}
-  void Accept(ParseTreeVisitor* visitor, void* data) const override;
-  zetasql_base::StatusOr<VisitResult> Accept(
-      NonRecursiveParseTreeVisitor* visitor) const override;
-  const ASTPathExpression* name() const { return name_; }
-  const ASTOptionsList* options_list() const { return options_list_; }
-  bool is_if_exists() const { return is_if_exists_; }
-  void set_is_if_exists(bool value) { is_if_exists_ = value; }
-
- private:
-  void InitFields() final {
-    FieldLoader fl(this);
-    fl.AddRequired(&name_);
-    fl.AddOptional(&options_list_, AST_OPTIONS_LIST);
-  }
-
-  const ASTPathExpression* name_ = nullptr;
-  const ASTOptionsList* options_list_ = nullptr;
-  bool is_if_exists_ = false;
-};
-
 class ASTCreateUserStatement final : public ASTCreateTableStmtBase {
  public:
   static constexpr ASTNodeKind kConcreteNodeKind =
@@ -7633,6 +7608,22 @@ class ASTAlterDatabaseStatement final : public ASTAlterStatementBase {
   static constexpr ASTNodeKind kConcreteNodeKind = AST_ALTER_DATABASE_STATEMENT;
 
   ASTAlterDatabaseStatement() : ASTAlterStatementBase(kConcreteNodeKind) {}
+  void Accept(ParseTreeVisitor* visitor, void* data) const override;
+  zetasql_base::StatusOr<VisitResult> Accept(
+      NonRecursiveParseTreeVisitor* visitor) const override;
+
+ private:
+  void InitFields() final {
+    FieldLoader fl(this);
+    InitPathAndAlterActions(&fl);
+  }
+};
+
+class ASTAlterUserStatement final : public ASTAlterStatementBase {
+ public:
+  static constexpr ASTNodeKind kConcreteNodeKind =
+      AST_ALTER_USER_STATEMENT;
+  ASTAlterUserStatement() : ASTAlterStatementBase(kConcreteNodeKind) {}
   void Accept(ParseTreeVisitor* visitor, void* data) const override;
   zetasql_base::StatusOr<VisitResult> Accept(
       NonRecursiveParseTreeVisitor* visitor) const override;
